@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.mindsortlabs.multiplayerstart.MainActivity">
+    android:padding="80px">
+
+    <EditText
+        android:id="@+id/et_bid1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="185dp"
+        android:ems="5"
+        android:inputType="numberPassword" />
+
+    <EditText
+        android:id="@+id/et_bid2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/et_bid1"
+        android:layout_centerVertical="true"
+        android:ems="5"
+        android:inputType="numberPassword" />
+
+    <Button
+        android:id="@+id/btn_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_opponent_bid"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="55dp"
+        android:text="Update" />
+
+    <TextView
+        android:id="@+id/tv_my_bid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tv_opponent_bid"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/et_bid1"
+        android:layout_marginEnd="22dp"
+        android:text="My Bid" />
+
+    <TextView
+        android:id="@+id/tv_opponent_bid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/et_bid2"
+        android:layout_marginStart="18dp"
+        android:text="Opponent Bid" />
+
+    <Button
+        android:id="@+id/sign_in_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="false"
+        android:layout_below="@+id/btn_update"
+        android:onClick="onClick"
+        android:text="Sign In" />
+
+    <Button
+        android:id="@+id/sign_out_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/btn_update"
+        android:onClick="onClick"
+        android:text="Sign Out" />
+
+</RelativeLayout>
