@@ -1,78 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.mindsortlabs.multiplayerstart.MainActivity">
-    android:padding="80px">
 
-    <EditText
-        android:id="@+id/et_bid1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:layout_marginBottom="185dp"
-        android:ems="5"
-        android:inputType="numberPassword" />
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.mindsortlabs.multiplayerstart.MainActivity"
+        >
 
-    <EditText
-        android:id="@+id/et_bid2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/et_bid1"
-        android:layout_centerVertical="true"
-        android:ems="5"
-        android:inputType="numberPassword" />
+        <!-- SIGN-IN SCREEN -->
+        <LinearLayout android:id="@+id/screen_sign_in" style="@style/LLScreen">
+            <TextView style="@style/GameTitle" />
+            <TextView style="@style/GameBlurb" />
 
-    <Button
-        android:id="@+id/btn_update"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_opponent_bid"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="55dp"
-        android:text="Update" />
+            <Button android:id="@+id/button_single_player"
+                style="@style/MainScreenButton"
+                android:text="@string/single_player" />
+            <com.google.android.gms.common.SignInButton android:id="@+id/button_sign_in"
+                style="@style/SignInButton" />
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/tv_my_bid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/tv_opponent_bid"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/et_bid1"
-        android:layout_marginEnd="22dp"
-        android:text="My Bid" />
+        <!-- MAIN SCREEN -->
+        <LinearLayout android:id="@+id/screen_main" style="@style/LLScreen">
+            <TextView style="@style/GameTitle" />
+            <Button android:id="@+id/button_single_player_2"
+                style="@style/MainScreenButton"
+                android:text="@string/single_player" />
+            <TextView style="@style/MainScreenButtonBlurb"
+                android:text="@string/single_player_explanation" />
+            <Button android:id="@+id/button_quick_game"
+                style="@style/MainScreenButton"
+                android:text="@string/quick_game" />
+            <TextView style="@style/MainScreenButtonBlurb"
+                android:text="@string/quick_game_explanation" />
+            <Button android:id="@+id/button_invite_players"
+                style="@style/MainScreenButton"
+                android:text="@string/invite_players" />
+            <TextView style="@style/MainScreenButtonBlurb"
+                android:text="@string/invite_players_explanation" />
+            <Button android:id="@+id/button_see_invitations"
+                style="@style/MainScreenButton"
+                android:text="@string/see_invitations" />
+            <TextView style="@style/MainScreenButtonBlurb"
+                android:text="@string/see_invitations_explanation" />
+            <Button android:id="@+id/button_sign_out"
+                style="@style/SignOutButton"
+                android:text="@string/sign_out" />
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/tv_opponent_bid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/et_bid2"
-        android:layout_marginStart="18dp"
-        android:text="Opponent Bid" />
+        <!-- INVITATION POPUP -->
+        <LinearLayout android:id="@+id/invitation_popup" style="@style/InvPopup">
+            <TextView android:id="@+id/incoming_invitation_text" style="@style/InvPopupText" />
+            <Button android:id="@+id/button_accept_popup_invitation"
+                style="@style/InvPopupButton"
+                android:text="@string/accept_popup_invite" />
+        </LinearLayout>
 
-    <Button
-        android:id="@+id/sign_in_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="false"
-        android:layout_below="@+id/btn_update"
-        android:onClick="onClick"
-        android:text="Sign In" />
+        <!-- "PLEASE WAIT" SCREEN -->
+        <LinearLayout android:id="@+id/screen_wait" style="@style/LLScreen">
+            <TextView style="@style/Blurb" android:text="@string/please_wait" />
+        </LinearLayout>
 
-    <Button
-        android:id="@+id/sign_out_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="false"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/btn_update"
-        android:onClick="onClick"
-        android:text="Sign Out" />
+        <!-- GAMEPLAY SCREEN -->
+        <LinearLayout android:id="@+id/screen_game" style="@style/LLScreen">
+            <TextView android:id="@+id/instructions"
+                style="@style/Instructions" android:text="@string/instructions" />
+            <TextView android:id="@+id/my_score" style="@style/ScoreDisplay" />
+            <Button android:id="@+id/button_click_me"
+                style="@style/GameButton"
+                android:text="@string/click_me"
+                android:layout_marginBottom="20dp" />
+            <TextView android:id="@+id/countdown" style="@style/FigureLabel" />
 
-</RelativeLayout>
+            <LinearLayout style="@style/ScoresBox">
+                <TextView android:id="@+id/score0" style="@style/ScoreText" />
+                <TextView android:id="@+id/score1" style="@style/ScoreText" />
+                <TextView android:id="@+id/score2" style="@style/ScoreText" />
+                <TextView android:id="@+id/score3" style="@style/ScoreText" />
+            </LinearLayout>
+        </LinearLayout>
+
+
+
+
+    </FrameLayout>
