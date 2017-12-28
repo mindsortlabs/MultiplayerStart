@@ -154,7 +154,8 @@ public class MultiplayerActivity extends Activity implements
     int oppSymbol = 0;
     boolean myTurn = false;
     int line = 0;
-
+    NumberPicker np;
+    android.support.v7.app.AlertDialog alertDialog ;
     boolean mPlayAgain = false;
     boolean oppPlayAgain = false;
 
@@ -304,7 +305,7 @@ public class MultiplayerActivity extends Activity implements
         LayoutInflater inflater = getLayoutInflater();
         View theView = inflater.inflate(R.layout.dialog_number_picker, null);
 
-        final NumberPicker np = (NumberPicker) theView.findViewById(R.id.num_picker);
+        np = (NumberPicker) theView.findViewById(R.id.num_picker);
         imgGoldStack = (ImageView) theView.findViewById(R.id.goldStackImg);
         builder.setView(theView);
 
@@ -354,7 +355,7 @@ public class MultiplayerActivity extends Activity implements
             }
         });
 
-        android.support.v7.app.AlertDialog alertDialog = builder.create();
+        alertDialog = builder.create();
         alertDialog.show();
         alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
@@ -1263,7 +1264,9 @@ public class MultiplayerActivity extends Activity implements
 
         // Since the state of the signed in user can change when the activity is not active
         // it is recommended to try and sign in silently from when the app resumes.
-//        signInSilently();
+        if (mRealTimeMultiplayerClient == null ) {
+            signInSilently();
+        }
     }
 
     @Override
@@ -1468,7 +1471,6 @@ public class MultiplayerActivity extends Activity implements
 
             Task<GoogleSignInAccount> task =
                     GoogleSignIn.getSignedInAccountFromIntent(intent);
-
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 onConnected(account);
@@ -1820,6 +1822,7 @@ public class MultiplayerActivity extends Activity implements
 
         @Override
         public void onP2PDisconnected(@NonNull String participant) {
+            Log.d(TAG,"P2P DISCONNECTED");
         }
 
         @Override
@@ -1833,6 +1836,21 @@ public class MultiplayerActivity extends Activity implements
 
         @Override
         public void onPeerLeft(Room room, @NonNull List<String> peersWhoLeft) {
+            Log.d(TAG,"PEER LEFT RESET ALL");
+
+            LayoutInflater inflater = getLayoutInflater();
+            View customView = inflater.inflate(R.layout.dialog_custom_toast, null);
+
+            TextView tvMsg = (TextView) customView.findViewById(R.id.tv_msg);
+            tvMsg.setText("OPPONENT LEFT  " +" YOU WIN" );
+            Toast toast = new Toast(getApplicationContext());
+            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+            toast.setDuration(Toast.LENGTH_SHORT);
+            toast.setView(customView);
+
+            toast.show();
+            if(alertDialog!=null && alertDialog.isShowing())
+                alertDialog.dismiss();
             updateRoom(room);
         }
 
@@ -1853,6 +1871,7 @@ public class MultiplayerActivity extends Activity implements
 
         @Override
         public void onPeersDisconnected(Room room, @NonNull List<String> peers) {
+            Log.d(TAG,"on PEERs DISCONNECTED");
             updateRoom(room);
         }
     };
@@ -2123,6 +2142,7 @@ public class MultiplayerActivity extends Activity implements
     int mCurScreen = -1;
 
     void switchToScreen(int screenId) {
+        Log.d(TAG,"SWITCH TO MAIN SCREEN");
         // make the requested screen visible; hide all others.
         for (int id : SCREENS) {
             findViewById(id).setVisibility(screenId == id ? View.VISIBLE : View.GONE);
