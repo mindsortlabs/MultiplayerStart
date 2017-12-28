@@ -156,6 +156,7 @@ public class MultiplayerActivity extends Activity implements
     int line = 0;
     NumberPicker np;
     android.support.v7.app.AlertDialog alertDialog ;
+    android.support.v7.app.AlertDialog msgDialog ;
     boolean mPlayAgain = false;
     boolean oppPlayAgain = false;
 
@@ -292,12 +293,12 @@ public class MultiplayerActivity extends Activity implements
             }
         });
 
-        android.support.v7.app.AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-        alertDialog.getWindow().clearFlags(
+        msgDialog = builder.create();
+        msgDialog.show();
+        msgDialog.getWindow().clearFlags(
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                         |WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-        alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        msgDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     }
 
     public void setBid() {
@@ -446,6 +447,10 @@ public class MultiplayerActivity extends Activity implements
     }
 
     private void broadcastMessage(int messageId) {
+
+        if(mRoomId==null){
+            return;
+        }
 
         mMsgBuf[0] = (byte) MESSAGE;
         mMsgBuf[1] = (byte) messageId;
@@ -1272,7 +1277,7 @@ public class MultiplayerActivity extends Activity implements
     @Override
     protected void onPause() {
         super.onPause();
-
+        Log.d(TAG,"onPause: ");
         // unregister our listeners.  They will be re-registered via onResume->signInSilently->onConnected.
         if (mInvitationsClient != null) {
             mInvitationsClient.unregisterInvitationCallback(mInvitationCallback);
@@ -1606,7 +1611,7 @@ public class MultiplayerActivity extends Activity implements
         Log.d(TAG, "**** got onStop");
 
         try {
-            if (mMultiplayer && mParticipants != null) {
+            if (mCurScreen== R.id.screen_gameplay) {
                 broadcastMessage(MESSAGE_BRB);
             }
         }
@@ -1614,12 +1619,16 @@ public class MultiplayerActivity extends Activity implements
             Log.d(TAG,"onStop Exception: "+e);
         }
         // if we're in a room, leave it.
-//        leaveRoom();
+
+        if(mCurScreen!=R.id.screen_gameplay) {
+            leaveRoom();
+            switchToMainScreen();
+        }
 
         // stop trying to keep the screen on
         stopKeepingScreenOn();
 
-//        switchToMainScreen();
+
 
         super.onStop();
     }
@@ -1838,19 +1847,20 @@ public class MultiplayerActivity extends Activity implements
         public void onPeerLeft(Room room, @NonNull List<String> peersWhoLeft) {
             Log.d(TAG,"PEER LEFT RESET ALL");
 
-            LayoutInflater inflater = getLayoutInflater();
-            View customView = inflater.inflate(R.layout.dialog_custom_toast, null);
+            String s;
+            if(halfGamePlayed()) {
+                s = "Opponent left \n" + " You Won";
+            }
+            else{
+                s = "Opponent left too soon.";
+            }
+            customToast(s, Toast.LENGTH_SHORT);
 
-            TextView tvMsg = (TextView) customView.findViewById(R.id.tv_msg);
-            tvMsg.setText("OPPONENT LEFT  " +" YOU WIN" );
-            Toast toast = new Toast(getApplicationContext());
-            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-            toast.setDuration(Toast.LENGTH_SHORT);
-            toast.setView(customView);
-
-            toast.show();
             if(alertDialog!=null && alertDialog.isShowing())
                 alertDialog.dismiss();
+
+            if(msgDialog!=null && msgDialog.isShowing())
+                msgDialog.dismiss();
             updateRoom(room);
         }
 
@@ -1875,6 +1885,26 @@ public class MultiplayerActivity extends Activity implements
             updateRoom(room);
         }
     };
+
+    private boolean halfGamePlayed() {
+
+        if(gameState==null){
+            return false;
+        }
+
+        int turnsPlayed = 0;
+        for(int i=0;i<8;i++){
+            if(gameState[i]!=2){
+                turnsPlayed++;
+            }
+        }
+
+        if(turnsPlayed>1){
+            return true;
+        }
+
+        return false;
+    }
 
     // Show error message about game being cancelled and return to main screen.
     void showGameError() {
